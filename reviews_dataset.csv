@@ -1,0 +1,49 @@
+brand,review,language,sentiment
+Apple,The phone quality is amazing and smooth,English (HF),Positive
+Apple,Battery drains very fast,English (HF),Negative
+Samsung,Display is bright and sharp,English (HF),Positive
+Samsung,Phone overheats while charging,English (HF),Negative
+Redmi,Best phone for the price,English (HF),Positive
+Redmi,Camera quality is okay not great,English (HF),Neutral
+Dell,Laptop performance is excellent for coding,English (HF),Positive
+Dell,The laptop is very heavy,English (HF),Negative
+HP,Build quality feels premium,English (HF),Positive
+HP,Customer support was slow,English (HF),Negative
+Lenovo,Keyboard is comfortable to use,English (HF),Positive
+Lenovo,Screen brightness is low,English (HF),Negative
+Amazon,Delivery was very fast,English (HF),Positive
+Amazon,Received damaged product,English (HF),Negative
+Flipkart,App interface is simple,English (HF),Positive
+Flipkart,Refund took too long,English (HF),Negative
+Sony,Sound quality is excellent,English (HF),Positive
+Sony,Product is overpriced,English (HF),Negative
+Boat,Good value for money,English (HF),Positive
+Boat,Mic quality is poor,English (HF),Negative
+Nike,Shoes are very comfortable,English (HF),Positive
+Nike,Sole got damaged quickly,English (HF),Negative
+Adidas,Stylish and durable shoes,English (HF),Positive
+Adidas,Size did not fit properly,English (HF),Negative
+Zara,Trendy clothing collection,English (HF),Positive
+Zara,Material quality could be better,English (HF),Neutral
+H&M,Affordable fashion brand,English (HF),Positive
+H&M,Colors faded after wash,English (HF),Negative
+Uber,Ride was smooth and comfortable,English (HF),Positive
+Uber,Driver was rude,English (HF),Negative
+Ola,Easy booking experience,English (HF),Positive
+Ola,App crashes often,English (HF),Negative
+Netflix,Large variety of content,English (HF),Positive
+Netflix,Subscription is expensive,English (HF),Negative
+Spotify,Music recommendations are accurate,English (HF),Positive
+Spotify,Too many ads in free version,English (HF),Negative
+Swiggy,Food arrived hot,English (HF),Positive
+Swiggy,Delivery was delayed,English (HF),Negative
+Zomato,Good restaurant options,English (HF),Positive
+Zomato,Order was incorrect,English (HF),Negative
+Google,Search results are very accurate,English (HF),Positive
+Google,Privacy issues exist,English (HF),Neutral
+Microsoft,Office tools are useful,English (HF),Positive
+Microsoft,Updates interrupt work,English (HF),Negative
+Instagram,Great platform for creators,English (HF),Positive
+Instagram,Algorithm reduced reach,English (HF),Negative
+Facebook,Easy to stay connected,English (HF),Positive
+Facebook,Too many ads shown,English (HF),Negative

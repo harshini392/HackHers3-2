@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>HackHers3 - Review Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="main-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h2><i class="fas fa-chart-line"></i> HackHers3</h2>
+        <div class="sidebar-nav">
+            <a href="/page/dashboard" class="nav-item {% if page == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="/page/new" class="nav-item {% if page == 'new' %}active{% endif %}">
+                <i class="fas fa-plus-circle"></i> New Analysis
+            </a>
+            <a href="/page/reviews" class="nav-item {% if page == 'reviews' %}active{% endif %}">
+                <i class="fas fa-list-alt"></i> All Reviews
+            </a>
+            <a href="/page/time" class="nav-item {% if page == 'time' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Time Analysis
+            </a>
+            <a href="/page/total" class="nav-item {% if page == 'total' %}active{% endif %}">
+                <i class="fas fa-chart-bar"></i> Sentiment Overview
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content-area">
+        <div class="content-card">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+</body>
+</html>

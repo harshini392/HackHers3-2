@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if page == "dashboard" %}
+<div class="dashboard-header">
+    <h1><i class="fas fa-tachometer-alt"></i> Analytics Dashboard</h1>
+    <p>Comprehensive overview of your brand review analytics</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ reviews_data|length }}</h3>
+        <p>Total Reviews Analyzed</p>
+    </div>
+    <div class="stat-card">
+        <h3>
+            {% set positive = namespace(count=0) %}
+            {% for r in reviews_data %}
+                {% if r.sentiment == "Positive" %}
+                    {% set positive.count = positive.count + 1 %}
+                {% endif %}
+            {% endfor %}
+            {{ positive.count }}
+        </h3>
+        <p>Positive Reviews</p>
+    </div>
+    <div class="stat-card">
+        <h3>
+            {% set negative = namespace(count=0) %}
+            {% for r in reviews_data %}
+                {% if r.sentiment == "Negative" %}
+                    {% set negative.count = negative.count + 1 %}
+                {% endif %}
+            {% endfor %}
+            {{ negative.count }}
+        </h3>
+        <p>Negative Reviews</p>
+    </div>
+    <div class="stat-card">
+        <h3>
+            {% set brands = namespace(count=0) %}
+            {% set seen = [] %}
+            {% for r in reviews_data %}
+                {% if r.brand not in seen %}
+                    {% set seen = seen.append(r.brand) %}
+                    {% set brands.count = brands.count + 1 %}
+                {% endif %}
+            {% endfor %}
+            {{ brands.count }}
+        </h3>
+        <p>Unique Brands</p>
+    </div>
+</div>
+
+{% elif page == "new" %}
+<div class="dashboard-header">
+    <h1><i class="fas fa-plus-circle"></i> New Review Analysis</h1>
+    <p>Analyze a new review to gain insights into customer sentiment</p>
+</div>
+
+<form method="post" class="analysis-form">
+    <div class="form-group">
+        <label for="brand"><i class="fas fa-tag"></i> Brand Name</label>
+        <input type="text" id="brand" name="brand" class="form-control" placeholder="Enter brand name..." required>
+    </div>
+    
+    <div class="form-group">
+        <label for="review"><i class="fas fa-comment-dots"></i> Customer Review</label>
+        <textarea id="review" name="review" class="form-control" placeholder="Paste or type the customer review here..." required></textarea>
+    </div>
+    
+    <button type="submit" class="btn">
+        <i class="fas fa-chart-pie"></i> Analyze Review
+    </button>
+</form>
+
+{% if submitted_data %}
+<div class="result-card">
+    <h3 style="color: #6a0dad; margin-bottom: 20px;">
+        <i class="fas fa-chart-bar"></i> Analysis Results
+    </h3>
+    
+    <div class="result-item">
+        <span class="result-label"><i class="fas fa-tag"></i> Brand:</span>
+        <span class="result-value">{{ submitted_data.brand }}</span>
+    </div>
+    
+    <div class="result-item">
+        <span class="result-label"><i class="fas fa-language"></i> Language:</span>
+        <span class="result-value language">{{ submitted_data.language }}</span>
+    </div>
+    
+    <div class="result-item">
+        <span class="result-label"><i class="fas fa-heart"></i> Sentiment:</span>
+        <span class="result-value sentiment {{ submitted_data.sentiment|lower }}">
+            {{ submitted_data.sentiment }}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+{% elif page == "reviews" %}
+<div class="dashboard-header">
+    <h1><i class="fas fa-list-alt"></i> All Reviews Analysis</h1>
+    <p>Complete overview of all analyzed customer reviews</p>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th><i class="fas fa-tag"></i> Brand</th>
+                <th><i class="fas fa-comment"></i> Review</th>
+                <th><i class="fas fa-language"></i> Language</th>
+                <th><i class="fas fa-heart"></i> Sentiment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reviews_data %}
+            <tr>
+                <td><strong>{{ r.brand }}</strong></td>
+                <td>{{ r.review[:100] }}{% if r.review|length > 100 %}...{% endif %}</td>
+                <td>
+                    <span class="result-value language" style="padding: 5px 12px; font-size: 0.9rem;">
+                        {{ r.language }}
+                    </span>
+                </td>
+                <td>
+                    <span class="result-value sentiment {{ r.sentiment|lower }}" style="padding: 5px 12px; font-size: 0.9rem;">
+                        {{ r.sentiment }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% elif page == "time" %}
+<div class="dashboard-header">
+    <h1><i class="fas fa-chart-line"></i> Sentiment Over Time</h1>
+    <p>Track how customer sentiment evolves across reviews</p>
+</div>
+
+<div class="chart-container">
+    <canvas id="timeChart"></canvas>
+</div>
+
+<script>
+const sentiments = [
+    {% for r in reviews_data %}
+        {% if r.sentiment == "Positive" %}
+            1,
+        {% elif r.sentiment == "Negative" %}
+            -1,
+        {% else %}
+            0,
+        {% endif %}
+    {% endfor %}
+];
+
+const labels = sentiments.map((_, i) => `Review ${i + 1}`);
+
+const ctx = document.getElementById('timeChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Sentiment Score',
+            data: sentiments,
+            borderColor: '#6a0dad',
+            backgroundColor: 'rgba(106, 13, 173, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#6a0dad',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 14
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                titleFont: { size: 14 },
+                bodyFont: { size: 14 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                },
+                ticks: {
+                    font: {
+                        size: 12
+                    },
+                    callback: function(value) {
+                        if (value === 1) return 'Positive';
+                        if (value === -1) return 'Negative';
+                        if (value === 0) return 'Neutral';
+                        return value;
+                    }
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                },
+                ticks: {
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+{% elif page == "total" %}
+<div class="dashboard-header">
+    <h1><i class="fas fa-chart-bar"></i> Sentiment Overview</h1>
+    <p>Distribution of sentiments across all reviews</p>
+</div>
+
+<div class="chart-container">
+    <canvas id="totalChart"></canvas>
+</div>
+
+<script>
+let positive = 0;
+let negative = 0;
+let neutral = 0;
+
+{% for r in reviews_data %}
+    {% if r.sentiment == "Positive" %}
+        positive++;
+    {% elif r.sentiment == "Negative" %}
+        negative++;
+    {% else %}
+        neutral++;
+    {% endif %}
+{% endfor %}
+
+const totalCtx = document.getElementById('totalChart').getContext('2d');
+new Chart(totalCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        datasets: [{
+            label: 'Number of Reviews',
+            data: [positive, neutral, negative],
+            backgroundColor: [
+                'rgba(46, 125, 50, 0.8)',
+                'rgba(97, 97, 97, 0.8)',
+                'rgba(198, 40, 40, 0.8)'
+            ],
+            borderColor: [
+                'rgb(46, 125, 50)',
+                'rgb(97, 97, 97)',
+                'rgb(198, 40, 40)'
+            ],
+            borderWidth: 2,
+            borderRadius: 10,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                titleFont: { size: 14 },
+                bodyFont: { size: 14 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                },
+                ticks: {
+                    font: {
+                        size: 12
+                    },
+                    stepSize: 1
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    font: {
+                        size: 13,
+                        weight: 'bold'
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+{% endif %}
+{% endblock %}
